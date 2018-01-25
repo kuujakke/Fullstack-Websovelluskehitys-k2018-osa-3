@@ -4,6 +4,7 @@
   "description": "Backend puhelinluettelo -sovellukselle",
   "main": "index.js",
   "scripts": {
+    "watch": "node_modules/.bin/nodemon index.js",
     "start": "node index.js",
     "test": "echo \\\"Error: no test specified\\\" && exit 1"
   },
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/kuujakke/Fullstack-Websovelluskehitys-k2018-osa-3#readme",
   "dependencies": {
     "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.11"
   }
 }
