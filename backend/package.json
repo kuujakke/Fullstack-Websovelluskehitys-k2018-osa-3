@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "Backend puhelinluettelo -sovellukselle",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuujakke/Fullstack-Websovelluskehitys-k2018-osa-3.git"
+  },
+  "author": "Jakke Kuukkanen",
+  "bugs": {
+    "url": "https://github.com/kuujakke/Fullstack-Websovelluskehitys-k2018-osa-3/issues"
+  },
+  "homepage": "https://github.com/kuujakke/Fullstack-Websovelluskehitys-k2018-osa-3#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
