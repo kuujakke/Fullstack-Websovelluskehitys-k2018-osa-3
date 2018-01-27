@@ -47,7 +47,7 @@ app.get('/api/persons/:id', (req, res) => {
 app.delete('/api/persons/:id', (req, res) => {
     let person = persons.find(p => p.id === Number(req.params.id))
     if (person) {
-        persons = persons.map(p => p.id !== person.id)
+        persons = persons.filter(p => p.id !== person.id)
         res.json(person)
     } else {
         res.status(404).end()
