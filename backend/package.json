@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/kuujakke/Fullstack-Websovelluskehitys-k2018-osa-3#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "morgan": "^1.9.0"
   },
   "devDependencies": {
     "nodemon": "^1.14.11"
