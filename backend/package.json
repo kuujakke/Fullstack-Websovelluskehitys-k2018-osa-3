@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/kuujakke/Fullstack-Websovelluskehitys-k2018-osa-3#readme",
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "morgan": "^1.9.0"
   },

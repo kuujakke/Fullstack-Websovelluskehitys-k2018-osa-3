@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+const cors = require('cors')
+app.use(cors())
+
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
@@ -48,6 +51,18 @@ app.get('/api/persons/:id', (req, res) => {
     person ? res.status(200).json(person) : res.status(404).end()
 })
 
+app.put('/api/persons/:id', (req, res) => {
+    let person = req.body
+    let validation = validate(person)
+    if (validation) {
+        persons = persons.filter(p => p.id !== person.id)
+        persons.concat(person)
+        res.status(200).json(person)
+    } else {
+        res.status(404).end()
+    }
+})
+
 app.delete('/api/persons/:id', (req, res) => {
     let person = persons.find(p => p.id === Number(req.params.id))
     if (person) {
@@ -64,7 +79,7 @@ app.post('/api/persons', (req, res) => {
     let validation = validate(person)
     if (validation.error === undefined) {
         persons = persons.concat(person)
-        res.status(validation.status).json(persons)
+        res.status(validation.status).json(person)
     } else {
         res.status(validation.status).json(validation)
     }
