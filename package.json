@@ -4,7 +4,7 @@
   "description": "Backend puhelinluettelo -sovellukselle",
   "main": "index.js",
   "scripts": {
-    "watch": "node_modules/.bin/nodemon index.js",
+    "watch": "node_modules/.bin/nodemon --inspect index.js",
     "start": "node index.js",
     "test": "echo \\\"Error: no test specified\\\" && exit 1"
   },
