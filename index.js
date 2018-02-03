@@ -15,99 +15,109 @@ morgan.token('data', (req, res) => {
 })
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Martti Tienari",
-        "number": "040-123456",
-        "id": 2
-    },
-    {
-        "name": "Arto Järvinen",
-        "number": "040-123456",
-        "id": 3
-    },
-    {
-        "name": "Lea Kutvonen",
-        "number": "040-123456",
-        "id": 4
-    }
-]
+const Person = require('./models/person')
 
 app.get('/api/persons', (req, res) => {
-    res.status(200).json(persons)
+    Person
+        .find({})
+        .then(persons => {
+            res.status(200).json(persons.map(Person.format))
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(404).end()
+        })
 })
 
 app.get('/info', (req, res) => {
-    res.send(
-        `<p>Puhelinluettelossa on ${persons.length} henkilöä.</p><p>${Date()}</p>`
-    )
+    Person
+        .find({})
+        .then(persons => {
+            res.send(
+                `<p>Puhelinluettelossa on ${persons.length} henkilöä.</p><p>${Date()}</p>`
+            )
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(404).end()
+        })
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    let person = persons.find(p => p.id === Number(req.params.id))
-    person ? res.status(200).json(person) : res.status(404).end()
+    Person
+        .findById(req.params.id)
+        .then(person => {
+            person ? res.status(200).json(Person.format(person)) : res.status(404).end()
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(404).end()
+        })
 })
 
 app.put('/api/persons/:id', (req, res) => {
-    let person = req.body
+    let body = req.body
+    const person = new Person({
+        _id: body.id,
+        name: body.name,
+        number: body.number
+    })
     let validation = validate(person)
     if (validation) {
-        persons = persons.filter(p => p.id !== person.id)
-        persons.concat(person)
-        res.status(200).json(person)
+        Person
+            .findByIdAndUpdate(person._id, { number: person.number })
+            .exec()
+            .then(() => {
+                console.log(Person.format(person))
+                res.status(200).json(Person.format(person))
+            })
+            .catch(error => {
+                res.status(400).json(error)
+            })
     } else {
         res.status(404).end()
     }
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    let person = persons.find(p => p.id === Number(req.params.id))
-    if (person) {
-        persons = persons.filter(p => p.id !== person.id)
-        res.status(200).json(person)
-    } else {
-        res.status(404).end()
-    }
+    Person
+        .findOneAndRemove({_id: req.params.id})
+        .then(() => {
+            res.status(200).end()
+        })
+        .catch((error) => {
+            console.log(error)
+            res.status(400).end()
+        })
 })
 
 app.post('/api/persons', (req, res) => {
-    let person = req.body
-    person.id = nextId()
+    let body = req.body
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
     let validation = validate(person)
     if (validation.error === undefined) {
-        persons = persons.concat(person)
-        res.status(validation.status).json(person)
+        person
+            .save()
+            .then(person => {
+                res.status(validation.status).json(Person.format(person))
+            })
+            .catch(error => {
+                console.log(error)
+                res.status(400).end()
+            })
     } else {
         res.status(validation.status).json(validation)
     }
 })
-
-const nextId = () => {
-    let nextId = randomId()
-    while (persons.find(p => p.id === nextId) !== undefined) {
-        nextId = randomId()
-    }
-    return nextId
-}
-
-const randomId = () => {
-    let min = 1000000000
-    let max = 9999999999
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
 
 const validate = (person) => {
     if (isEmpty(person.name)) {
         return {error: "Name can't be empty!", status: 400}
     } else if (isEmpty(person.number)) {
         return {error: "Number can't be empty!", status: 400}
-    } else if (persons.find(p => p.name === person.name) !== undefined) {
-        return {error: "Person already exists", status: 403}
     } else {
         return {error: undefined, status: 201}
     }
@@ -118,7 +128,7 @@ const isEmpty = (string) => {
 }
 
 const error = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+    response.status(404).send({error: 'unknown endpoint'})
 }
 
 app.use(error)
