@@ -6,7 +6,10 @@ mongoose.connect(url)
 mongoose.Promise = global.Promise;
 
 const Person = mongoose.model('Person', {
-    name: String,
+    name: {
+        type: String,
+        unique: true
+    },
     number: String
 })
 

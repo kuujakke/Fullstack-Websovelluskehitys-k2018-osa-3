@@ -8,7 +8,10 @@ mongoose.Promise = global.Promise;
 
 const personSchema = new Schema({
     id: Number,
-    name: String,
+    name: {
+        type: String,
+        unique: true
+    },
     number: String
 })
 
