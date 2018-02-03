@@ -21,7 +21,12 @@ app.get('/api/persons', (req, res) => {
     Person
         .find({})
         .then(persons => {
-            res.status(200).json(persons.map(Person.format))
+            if (persons) {
+                res.status(200).json(persons.map(Person.format))
+            } else {
+                console.log(persons)
+                res.status(404).end()
+            }
         })
         .catch(error => {
             console.log(error)
@@ -33,9 +38,13 @@ app.get('/info', (req, res) => {
     Person
         .find({})
         .then(persons => {
-            res.send(
-                `<p>Puhelinluettelossa on ${persons.length} henkilöä.</p><p>${Date()}</p>`
-            )
+            if (persons) {
+                res.send(
+                    `<p>Puhelinluettelossa on ${persons.length} henkilöä.</p><p>${Date()}</p>`
+                )
+            } else {
+                res.status(404).end()
+            }
         })
         .catch(error => {
             console.log(error)
@@ -102,7 +111,11 @@ app.post('/api/persons', (req, res) => {
         person
             .save()
             .then(person => {
-                res.status(validation.status).json(Person.format(person))
+                if (person) {
+                    res.status(validation.status).json(Person.format(person))
+                } else {
+                    res.status(404).end()
+                }
             })
             .catch(error => {
                 console.log(error)
