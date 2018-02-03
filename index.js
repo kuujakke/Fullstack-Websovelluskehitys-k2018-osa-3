@@ -10,7 +10,7 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
 const morgan = require('morgan')
-morgan.token('data', (req, res) => {
+morgan.token('data', (req) => {
     return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
@@ -90,7 +90,7 @@ app.put('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
     Person
-        .findOneAndRemove({_id: req.params.id})
+        .findOneAndRemove({ _id: req.params.id })
         .then(() => {
             res.status(200).end()
         })
@@ -128,11 +128,11 @@ app.post('/api/persons', (req, res) => {
 
 const validate = (person) => {
     if (isEmpty(person.name)) {
-        return {error: "Name can't be empty!", status: 400}
+        return { error: 'Name can´t be empty!', status: 400 }
     } else if (isEmpty(person.number)) {
-        return {error: "Number can't be empty!", status: 400}
+        return { error: 'Number can´t be empty!', status: 400 }
     } else {
-        return {error: undefined, status: 201}
+        return { error: undefined, status: 201 }
     }
 }
 
@@ -141,7 +141,7 @@ const isEmpty = (string) => {
 }
 
 const error = (request, response) => {
-    response.status(404).send({error: 'unknown endpoint'})
+    response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(error)
